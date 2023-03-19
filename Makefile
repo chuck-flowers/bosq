@@ -5,6 +5,9 @@ BIN_NAME=bosq
 PREFIX ?= /usr/local
 
 # TOOLS
+CC=gcc
+CFLAGS ?= -c -Wall -Wpedantic -Werror
+LFLAGS ?=
 PANDOC ?= pandoc
 PANDOC_FLAGS ?= --standalone
 SHELLCHECK ?= shellcheck
@@ -20,23 +23,23 @@ install: install-bin install-man
 uninstall: uninstall-man
 clean:
 	-rm -rf $(DST_DIR)
+	-rm $(wildcard $(SRC_DIR)/*.o)
 
-# BINS
-SRC_BIN_DIR=$(SRC_DIR)/bin
-SRC_BIN_FILE=$(SRC_BIN_DIR)/$(BIN_NAME)
-DST_BIN_DIR=$(DST_DIR)/bin
-DST_BIN_FILE=$(DST_BIN_DIR)/$(BIN_NAME)
+# BIN
 .PHONY: bin install-bin uninstall-bin
+SRC_FILES=$(wildcard $(SRC_DIR)/*.c)
+INC_FILES=$(wildcard $(SRC_DIR)/*.h)
+OBJ_FILES=$(patsubst %.c, %.o, $(SRC_FILES))
+DST_BIN_FILE=$(DST_DIR)/bin/$(BIN_NAME)
 bin: $(DST_BIN_FILE)
 install-bin:
-	mkdir -p $(PREFIX)/bin
-	install -m 755 $(DST_BIN_FILE) $(PREFIX)/bin/$(BIN_NAME)
-uninstall-bin:
-	-rm $(PREFIX)/bin/$(BIN_NAME)
-$(DST_BIN_FILE): $(SRC_BIN_FILE)
-	$(SHELLCHECK) $(SHELLCHECK_FLAGS) $^
-	mkdir -p $(dir $@)
-	install -m 755 $^ $@
+	install $(DST_BIN_FILE) $(PREFIX)/bin
+$(DST_DIR)/bin/$(BIN_NAME): $(OBJ_FILES)
+	mkdir -p $(dir $(DST_BIN_FILE))
+	$(CC) $(LFLAGS) $^ -o $@
+%.o: %.c %.h
+%.o: %.c
+	$(CC) $(CFLAGS) $< -o $@
 
 # MAN PAGES
 SRC_MAN_DIR=$(SRC_DIR)/man
