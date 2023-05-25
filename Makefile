@@ -33,6 +33,7 @@ OBJ_FILES=$(patsubst %.c, %.o, $(SRC_FILES))
 DST_BIN_FILE=$(DST_DIR)/bin/$(BIN_NAME)
 bin: $(DST_BIN_FILE)
 install-bin:
+	mkdir -p $(dir $(PREFIX)/bin)
 	install $(DST_BIN_FILE) $(PREFIX)/bin
 $(DST_DIR)/bin/$(BIN_NAME): $(OBJ_FILES)
 	mkdir -p $(dir $(DST_BIN_FILE))
@@ -48,13 +49,11 @@ SRC_MAN_MD_FILES=$(shell find $(SRC_MAN_DIR) -type f -name '*.md')
 DST_MAN_PAGES=$(patsubst $(SRC_MAN_DIR)/%.md, $(DST_MAN_DIR)/%, $(SRC_MAN_MD_FILES))
 .PHONY: man install-man
 man: $(DST_MAN_PAGES)
-install-man: $(patsubst $(DST_MAN_DIR)/%, $(PREFIX)/share/man/%, $(DST_MAN_PAGES))
-$(PREFIX)/share/man/%:
-	mkdir -p $(dir $@)
-	install -m 444 $(patsubst $(PREFIX)/share/man/%, $(DST_MAN_DIR)/%, $@) $@
-uninstall-man:
-	-rm $(patsubst $(DST_MAN_DIR)/%, $(PREFIX)/share/man/%, $(page))
 $(DST_MAN_DIR)/%: $(SRC_MAN_DIR)/%.md 
 	mkdir -p $(dir $@)
 	$(PANDOC) $(PANDOC_FLAGS) $< --to man -o $@
-
+install-man:
+	mkdir -p $(dir $(PREFIX)/share/man)
+	$(foreach p,$(DST_MAN_PAGES),install -t $(patsubst $(DST_MAN_DIR)/%,$(PREFIX)/share/man/%,$(dir $(p))) $(p))
+uninstall-man:
+	-rm $(patsubst $(DST_MAN_DIR)/%, $(PREFIX)/share/man/%, $(page))
