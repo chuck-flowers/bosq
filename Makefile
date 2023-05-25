@@ -57,3 +57,8 @@ install-man:
 	$(foreach p,$(DST_MAN_PAGES),install -t $(patsubst $(DST_MAN_DIR)/%,$(PREFIX)/share/man/%,$(dir $(p))) $(p))
 uninstall-man:
 	-rm $(patsubst $(DST_MAN_DIR)/%, $(PREFIX)/share/man/%, $(page))
+
+# DEV
+.PHONY: dev
+dev: clean
+	bear -- make
