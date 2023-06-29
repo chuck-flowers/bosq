@@ -1,52 +1,58 @@
-# APPLICATION SETTINGS
+# Application Settings
 BIN_NAME=bosq
 
-# INSTALLATION SETTINGS
+# Installation Settings
 PREFIX ?= /usr/local
 
-# TOOLS
+# Compiler Settings
 CC=gcc
 CFLAGS ?= -c -Wall -Wpedantic -Werror
 LFLAGS ?=
+
+# Pandoc Settings
 PANDOC ?= pandoc
 PANDOC_FLAGS ?= --standalone
-SHELLCHECK ?= shellcheck
-SHELLCHECK_FLAGS ?= --format tty
 
-# PROJECT DIRS
+# Project Directories
 SRC_DIR ?= src
 DST_DIR ?= build
 
 .PHONY: all install uninstall clean
 all: bin man
 install: install-bin install-man
-uninstall: uninstall-man
+uninstall: uninstall-bin uninstall-man
 clean:
 	-rm -rf $(DST_DIR)
 	-rm $(wildcard $(SRC_DIR)/*.o)
 
-# BIN
-.PHONY: bin install-bin uninstall-bin
+# Source Files
 SRC_FILES=$(wildcard $(SRC_DIR)/*.c)
 INC_FILES=$(wildcard $(SRC_DIR)/*.h)
+
+# Build Files
 OBJ_FILES=$(patsubst %.c, %.o, $(SRC_FILES))
 DST_BIN_FILE=$(DST_DIR)/bin/$(BIN_NAME)
+
+.PHONY: bin install-bin uninstall-bin
 bin: $(DST_BIN_FILE)
-install-bin:
-	mkdir -p $(dir $(PREFIX)/bin)
-	install $(DST_BIN_FILE) $(PREFIX)/bin
-$(DST_DIR)/bin/$(BIN_NAME): $(OBJ_FILES)
+$(DST_BIN_FILE): $(OBJ_FILES)
 	mkdir -p $(dir $(DST_BIN_FILE))
 	$(CC) $(LFLAGS) $^ -o $@
 %.o: %.c %.h
 %.o: %.c
 	$(CC) $(CFLAGS) $< -o $@
+install-bin:
+	mkdir -p $(dir $(PREFIX)/bin)
+	install $(DST_BIN_FILE) $(PREFIX)/bin
+uninstall-bin:
+	-rm $(PREFIX)/bin/$(BIN_NAME)
 
-# MAN PAGES
+# Man Pages
 SRC_MAN_DIR=$(SRC_DIR)/man
 DST_MAN_DIR=$(DST_DIR)/man
 SRC_MAN_MD_FILES=$(shell find $(SRC_MAN_DIR) -type f -name '*.md')
 DST_MAN_PAGES=$(patsubst $(SRC_MAN_DIR)/%.md, $(DST_MAN_DIR)/%, $(SRC_MAN_MD_FILES))
+
 .PHONY: man install-man
 man: $(DST_MAN_PAGES)
 $(DST_MAN_DIR)/%: $(SRC_MAN_DIR)/%.md 
@@ -58,7 +64,8 @@ install-man:
 uninstall-man:
 	-rm $(patsubst $(DST_MAN_DIR)/%, $(PREFIX)/share/man/%, $(page))
 
-# DEV
+# Development
 .PHONY: dev
 dev: clean
 	bear -- make
+
