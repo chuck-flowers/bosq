@@ -53,7 +53,7 @@ $(DST_MAN_DIR)/%: $(SRC_MAN_DIR)/%.md
 	mkdir -p $(dir $@)
 	$(PANDOC) $(PANDOC_FLAGS) $< --to man -o $@
 install-man:
-	mkdir -p $(dir $(PREFIX)/share/man)
+	mkdir -p $(PREFIX)/share/man/man1
 	$(foreach p,$(DST_MAN_PAGES),install -t $(patsubst $(DST_MAN_DIR)/%,$(PREFIX)/share/man/%,$(dir $(p))) $(p))
 uninstall-man:
 	-rm $(patsubst $(DST_MAN_DIR)/%, $(PREFIX)/share/man/%, $(page))
