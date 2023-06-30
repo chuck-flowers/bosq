@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,23 +10,22 @@ const char *SPAN = u8"│   ";
 const char *FINAL_PREFIX = u8"└── ";
 const char *D = u8"    ";
 
-TreeNode *treeNodeNew() {
+TreeNode *treeNodeNew(void) {
   TreeNode *node = malloc(sizeof(TreeNode));
   treeNodeInit(node);
   return node;
 }
 
-void treeNodeInit(TreeNode *node) {
-  mapInit(&node->map);
-}
+void treeNodeInit(TreeNode *node) { mapInit(&node->map); }
 
 TreeNode *treeNodeDelete(TreeNode *node) {
   mapDestruct(&node->map);
   return NULL;
 }
 
-void treeNodeAdd(TreeNode *node, char *key, char delimiter) {
+void treeNodeAdd(TreeNode *node, char *key, char *delimiter) {
   size_t totalKeyLength = strlen(key);
+  size_t delimiterLength = strlen(delimiter);
 
   // If the key is empty, mark the current node and exit
   if (totalKeyLength == 0) {
@@ -36,15 +36,30 @@ void treeNodeAdd(TreeNode *node, char *key, char delimiter) {
   // Find length of "root" segment
   size_t rootSegLength;
   for (rootSegLength = 0; rootSegLength < totalKeyLength; rootSegLength++) {
-    char c = key[rootSegLength];
-    if (c == delimiter) {
+
+    // Don't bother checking for the delimiter if there isn't enough input
+    // remaining
+    if (rootSegLength + delimiterLength >= totalKeyLength) {
+      continue;
+    }
+
+    bool isDelimiter = true;
+    for (size_t i = 0; i < delimiterLength; i++) {
+      char c = key[rootSegLength + i];
+      char d = delimiter[i];
+      if (c != d) {
+        isDelimiter = false;
+      }
+    }
+
+    if (isDelimiter) {
       break;
     }
   }
 
   // Allocate a dedicated, "root" segment
   char *rootSeg = malloc(sizeof(char) * rootSegLength + 1);
-  char *remaining = key + rootSegLength + 1;
+  char *remaining = key + rootSegLength + delimiterLength;
   memcpy(rootSeg, key, rootSegLength);
   rootSeg[rootSegLength] = '\0';
 
@@ -74,7 +89,6 @@ size_t treeNodeDepth(TreeNode *node) {
 
 void treeNodePrint(TreeNode *node, bool *isLastOfSiblings, size_t depth) {
 
-
   size_t childCount = node->map.length;
   for (size_t i = 0; i < childCount; i++) {
     char *name = node->map.keys[i];
@@ -89,8 +103,8 @@ void treeNodePrint(TreeNode *node, bool *isLastOfSiblings, size_t depth) {
           printf("%s", PREFIX);
         }
       } else if (isLastOfSiblings[d + 2]) {
-		printf("    ");
-	  } else {
+        printf("    ");
+      } else {
         printf("%s", SPAN);
       }
     }

@@ -1,4 +1,5 @@
-% NAME(1) 0.0.0 | Bosq Documentation
+% BOSQ(1) 0.0.0 | Bosq Documentation
+% Timothy "Chuck" Flowers
 
 # NAME
 
@@ -6,13 +7,17 @@ bosq - a utility for generating tree diagrams from lists
 
 # SYNOPSIS
 
-**bosq**
+**bosq** [**-d** _delimiter_]
 
 # CONFIGURATION
 
 # DESCRIPTION
 
 # OPTIONS
+
+-d, --delimiter
+
+: Specifies the delimiter to use for separating the paths for the tree
 
 # EXIT STATUS
 
@@ -32,13 +37,13 @@ bosq - a utility for generating tree diagrams from lists
 
 # BUGS
 
+[https://github.com/chuck-flowers/bosq]
+
 # EXAMPLE
 
-__find -type f -name \*.md | bosq__
+**find -type f -name** _\*.md_ **| bosq**
 
-	Show Markdown File Tree
-
-# AUTHORS
+: Show all files with a _.md_ extension as a tree
 
 # SEE ALSO
 

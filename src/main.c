@@ -2,13 +2,18 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "args.h"
 #include "map.h"
 #include "tree.h"
 #include "treenode.h"
 
 #define MAX_LINE_SIZE 1024
 
-int main() {
+int main(int argc, char **argv) {
+  // Parse the CLI args
+  CliArgs args;
+  parseArgs(&args, argc, argv);
+
   Tree *tree = treeNew();
   if (tree == NULL) {
     fprintf(stderr, "Failed to allocate the Tree struct\n");
@@ -22,7 +27,7 @@ int main() {
     size_t line_length = strlen(line);
     line[line_length - 1] = '\0';
 
-	treeAdd(tree, line, '/');
+    treeAdd(tree, line, args.delimiter);
   }
 
   // Traverse and print tree

@@ -11,13 +11,13 @@ typedef struct TreeNode {
   Map map;
 } TreeNode;
 
-TreeNode *treeNodeNew();
+TreeNode *treeNodeNew(void);
 
 void treeNodeInit(TreeNode *node);
 
 TreeNode *treeNodeDelete(TreeNode *node);
 
-void treeNodeAdd(TreeNode *node, char *key, char delimiter);
+void treeNodeAdd(TreeNode *node, char *key, char *delimiter);
 
 size_t treeNodeDepth(TreeNode *node);
 

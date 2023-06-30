@@ -6,16 +6,16 @@
 #include "treenode.h"
 
 typedef struct Tree {
-	TreeNode root;
+  TreeNode root;
 } Tree;
 
-Tree *treeNew();
+Tree *treeNew(void);
 
 void treeInit(Tree *tree);
 
 Tree *treeDelete(Tree *tree);
 
-void treeAdd(Tree *tree, char *key, char delimiter);
+void treeAdd(Tree *tree, char *key, char *delimiter);
 
 size_t treeDepth(Tree *tree);
 

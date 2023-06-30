@@ -7,15 +7,13 @@
 #include "tree.h"
 #include "treenode.h"
 
-Tree *treeNew() {
+Tree *treeNew(void) {
   Tree *tree = malloc(sizeof(Tree));
   treeInit(tree);
   return tree;
 }
 
-void treeInit(Tree *tree) {
-  treeNodeInit(&tree->root);
-}
+void treeInit(Tree *tree) { treeNodeInit(&tree->root); }
 
 Tree *treeDelete(Tree *tree) {
   treeNodeDelete(&tree->root);
@@ -23,7 +21,7 @@ Tree *treeDelete(Tree *tree) {
   return NULL;
 }
 
-void treeAdd(Tree *tree, char *key, char delimiter) {
+void treeAdd(Tree *tree, char *key, char *delimiter) {
   treeNodeAdd(&tree->root, key, delimiter);
 }
 
