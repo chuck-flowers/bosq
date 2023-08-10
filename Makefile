@@ -42,8 +42,8 @@ $(DST_BIN_FILE): $(OBJ_FILES)
 %.o: %.c
 	$(CC) $(CFLAGS) $< -o $@
 install-bin:
-	mkdir -p $(dir $(PREFIX)/bin)
-	install $(DST_BIN_FILE) $(PREFIX)/bin
+	mkdir -p $(PREFIX)/bin
+	install -t $(PREFIX)/bin $(DST_BIN_FILE)
 uninstall-bin:
 	-rm $(PREFIX)/bin/$(BIN_NAME)
 
