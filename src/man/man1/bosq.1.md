@@ -1,4 +1,4 @@
-% BOSQ(1) 0.0.0 | Bosq Documentation
+% BOSQ(1) 1.0.0 | Bosq Documentation
 % Timothy "Chuck" Flowers
 
 # NAME
