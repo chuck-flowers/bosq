@@ -6,8 +6,8 @@ PREFIX ?= /usr/local
 
 # Compiler Settings
 CC=gcc
-CFLAGS ?= -c -Wall -Wpedantic -Werror
-LFLAGS ?=
+CFLAGS += -c -Wall -Wpedantic -Werror
+LFLAGS +=
 
 # Pandoc Settings
 PANDOC ?= pandoc
